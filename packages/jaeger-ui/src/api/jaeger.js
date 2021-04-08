@@ -89,9 +89,6 @@ const JaegerAPI = {
   fetchDependencies(endTs = new Date().getTime(), lookback = DEFAULT_DEPENDENCY_LOOKBACK) {
     return getJSON(`${this.apiRoot}dependencies`, { query: { endTs, lookback } });
   },
-  fetchQualityMetrics(service, hours) {
-    return getJSON(`/qualitymetrics-v2`, { query: { hours, service } });
-  },
   fetchServiceOperations(serviceName) {
     return getJSON(`${this.apiRoot}services/${encodeURIComponent(serviceName)}/operations`);
   },
