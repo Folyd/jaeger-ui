@@ -14,12 +14,9 @@
 
 import * as React from 'react';
 import { Layout } from 'antd';
-import cx from 'classnames';
-import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-import TopNav from './TopNav';
 import { ReduxState } from '../../types';
 import { EmbeddedState } from '../../types/embedded';
 import { trackPageView } from '../../utils/tracking';
@@ -33,7 +30,7 @@ type TProps = RouteComponentProps<any> & {
   search: string;
 };
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 // export for tests
 export class PageImpl extends React.Component<TProps> {
@@ -51,19 +48,9 @@ export class PageImpl extends React.Component<TProps> {
   }
 
   render() {
-    const { embedded } = this.props;
-    const contentCls = cx({ 'Page--content': !embedded });
     return (
       <div>
-        <Helmet title="Jaeger UI" />
-        <Layout>
-          {!embedded && (
-            <Header className="Page--topNav">
-              <TopNav />
-            </Header>
-          )}
-          <Content className={contentCls}>{this.props.children}</Content>
-        </Layout>
+          <Content>{this.props.children}</Content>
       </div>
     );
   }
