@@ -33,7 +33,6 @@ import {
   WORD_RX,
 } from './constants';
 import { setFocusIcon } from './node-icons';
-import { trackSetFocus, trackViewTraces, trackVertexSetOperation } from '../../index.track';
 import { getUrl } from '../../url';
 import BreakableText from '../../../common/BreakableText';
 import FilteredList from '../../../common/FilteredList';
@@ -186,7 +185,6 @@ export class UnconnectedDdgNodeContent extends React.PureComponent<TProps, TStat
   };
 
   private setOperation = (operation: string) => {
-    trackVertexSetOperation();
     this.props.setOperation(operation);
   };
 
@@ -201,7 +199,6 @@ export class UnconnectedDdgNodeContent extends React.PureComponent<TProps, TStat
   };
 
   private viewTraces = () => {
-    trackViewTraces();
     const { vertexKey, getVisiblePathElems } = this.props;
     const elems = getVisiblePathElems(vertexKey);
     if (elems) {
@@ -311,7 +308,7 @@ export class UnconnectedDdgNodeContent extends React.PureComponent<TProps, TStat
         </div>
         <div className="DdgNodeContent--actionsWrapper">
           {focalNodeUrl && (
-            <a href={focalNodeUrl} className="DdgNodeContent--actionsItem" onClick={trackSetFocus}>
+            <a href={focalNodeUrl} className="DdgNodeContent--actionsItem">
               <span className="DdgNodeContent--actionsItemIconWrapper">{setFocusIcon}</span>
               <span className="DdgNodeContent--actionsItemText">Set focus</span>
             </a>

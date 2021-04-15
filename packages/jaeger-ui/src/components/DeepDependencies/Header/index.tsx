@@ -20,7 +20,6 @@ import MdVisibilityOff from 'react-icons/lib/md/visibility-off';
 import HopsSelector from './HopsSelector';
 import NameSelector from '../../common/NameSelector';
 import LayoutSettings from './LayoutSettings';
-import { trackFilter, trackHeaderSetOperation, trackShowMatches } from '../index.track';
 import UiFindInput from '../../common/UiFindInput';
 import { EDirection, TDdgDistanceToPathElems, EDdgDensity } from '../../../model/ddg/types';
 
@@ -99,12 +98,10 @@ export default class Header extends React.PureComponent<TProps> {
   };
 
   setOperation = (operation: string) => {
-    trackHeaderSetOperation();
     this.props.setOperation(operation);
   };
 
   handleInfoClick = () => {
-    trackShowMatches();
     const { hiddenUiFindMatches, showVertices } = this.props;
     if (hiddenUiFindMatches) showVertices(Array.from(hiddenUiFindMatches));
   };
@@ -170,7 +167,6 @@ export default class Header extends React.PureComponent<TProps> {
                 allowClear
                 forwardedRef={this._uiFindInput}
                 inputProps={{ className: 'DdgHeader--uiFindInput' }}
-                trackFindFunction={trackFilter}
               />
               {this.getUiFindInfo()}
             </div>

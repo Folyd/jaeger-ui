@@ -18,7 +18,6 @@ import SortAmountAsc from 'react-icons/lib/fa/sort-amount-asc.js';
 import IoChevronRight from 'react-icons/lib/io/chevron-right';
 
 import ChevronDown from '../ChevronDown';
-import { trackHopChange } from '../../index.track';
 import { ECheckedStatus, EDirection, THop } from '../../../../model/ddg/types';
 
 import './Selector.css';
@@ -36,9 +35,8 @@ const CLASSNAME = 'HopsSelector--Selector';
 
 export default class Selector extends PureComponent<TProps> {
   private handleClick(distance: number) {
-    const { direction, furthestFullDistance, handleClick } = this.props;
+    const { direction, handleClick } = this.props;
     handleClick(distance, direction);
-    trackHopChange(furthestFullDistance, distance, direction);
   }
 
   private makeBtn = (

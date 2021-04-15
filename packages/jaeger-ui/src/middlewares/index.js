@@ -19,8 +19,6 @@ import { replace } from 'react-router-redux';
 import { searchTraces, fetchServiceOperations } from '../actions/jaeger-api';
 import { getUrl as getSearchUrl } from '../components/SearchTracePage/url';
 
-export { default as trackMiddleware } from './track';
-
 /**
  * Middleware to load "operations" for a particular service.
  */

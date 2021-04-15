@@ -15,7 +15,6 @@
 import * as React from 'react';
 import { Button } from 'antd';
 
-import { trackConversions, EAltViewActions } from './index.track';
 import { getUrl, getUrlState } from '../../DeepDependencies/url';
 import { getConfigValue } from '../../../utils/config/get-config';
 
@@ -25,7 +24,6 @@ type Props = {
 };
 
 function viewAllDep({ ctrlKey, metaKey }: React.MouseEvent<HTMLButtonElement>) {
-  trackConversions(EAltViewActions.Ddg);
   const { density, operation, service, showOp } = getUrlState(window.location.search);
   window.open(getUrl({ density, operation, service, showOp }), ctrlKey || metaKey ? '_blank' : '_self');
 }

@@ -17,7 +17,6 @@ import { Checkbox, Radio, Popover } from 'antd';
 import { shallow } from 'enzyme';
 
 import LayoutSettings, { densityOptions } from '.';
-import * as track from '../../index.track';
 
 import { EDdgDensity } from '../../../../model/ddg/types';
 
@@ -36,13 +35,6 @@ describe('LayoutSettings', () => {
       .prop('content');
     return shallow(content);
   };
-  let trackDensityChangeSpy;
-  let trackToggleShowOpSpy;
-
-  beforeAll(() => {
-    trackDensityChangeSpy = jest.spyOn(track, 'trackDensityChange');
-    trackToggleShowOpSpy = jest.spyOn(track, 'trackToggleShowOp');
-  });
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -63,7 +55,6 @@ describe('LayoutSettings', () => {
       .at(newIdx)
       .simulate('change', { target: { value: newDensity } });
     expect(props.setDensity).toHaveBeenCalledWith(newDensity);
-    expect(trackDensityChangeSpy).toHaveBeenCalledWith(props.density, newDensity, densityOptions);
   });
 
   it('no-ops if current density is selected', () => {
@@ -72,7 +63,6 @@ describe('LayoutSettings', () => {
       .at(densityIdx)
       .simulate('change', { target: { value: props.density } });
     expect(props.setDensity).not.toHaveBeenCalled();
-    expect(trackDensityChangeSpy).not.toHaveBeenCalled();
   });
 
   it('renders showOperations checkbox', () => {
@@ -97,6 +87,5 @@ describe('LayoutSettings', () => {
       .simulate('change', { target: { checked } });
 
     expect(props.toggleShowOperations).toHaveBeenCalledWith(checked);
-    expect(trackToggleShowOpSpy).toHaveBeenCalledWith(checked);
   });
 });

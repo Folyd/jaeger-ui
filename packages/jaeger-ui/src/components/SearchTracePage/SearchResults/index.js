@@ -24,7 +24,6 @@ import queryString from 'query-string';
 import AltViewOptions from './AltViewOptions';
 import DiffSelection from './DiffSelection';
 import * as markers from './index.markers';
-import { trackAltView } from './index.track';
 import ResultItem from './ResultItem';
 import ScatterPlot from './ScatterPlot';
 import { getUrl } from '../url';
@@ -107,7 +106,6 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
     const { location, history } = this.props;
     const urlState = queryString.parse(location.search);
     const view = urlState.view && urlState.view === 'ddg' ? 'traces' : 'ddg';
-    trackAltView(view);
     history.push(getUrl({ ...urlState, view }));
   };
 

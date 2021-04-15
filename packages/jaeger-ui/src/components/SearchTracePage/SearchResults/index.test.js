@@ -17,7 +17,6 @@ import { shallow } from 'enzyme';
 
 import { UnconnectedSearchResults as SearchResults } from '.';
 import * as markers from './index.markers';
-import * as track from './index.track';
 import AltViewOptions from './AltViewOptions';
 import DiffSelection from './DiffSelection';
 import ResultItem from './ResultItem';
@@ -109,11 +108,6 @@ describe('<SearchResults>', () => {
       const viewDdg = 'ddg';
       const viewTraces = 'traces';
       const search = `${searchParam}=${viewDdg}`;
-      let trackAltViewSpy;
-
-      beforeAll(() => {
-        trackAltViewSpy = jest.spyOn(track, 'trackAltView');
-      });
 
       it('updates url to view ddg and back and back again - and tracks changes', () => {
         const otherParam = 'param';
@@ -125,19 +119,16 @@ describe('<SearchResults>', () => {
         const toggle = wrapper.find(AltViewOptions).prop('onDdgViewClicked');
         toggle();
         expect(push).toHaveBeenLastCalledWith(getUrl({ [otherParam]: otherValue, [searchParam]: viewDdg }));
-        expect(trackAltViewSpy).toHaveBeenLastCalledWith(viewDdg);
 
         wrapper.setProps({ location: { search: `${otherSearch}&${search}` } });
         toggle();
         expect(push).toHaveBeenLastCalledWith(
           getUrl({ [otherParam]: otherValue, [searchParam]: viewTraces })
         );
-        expect(trackAltViewSpy).toHaveBeenLastCalledWith(viewTraces);
 
         wrapper.setProps({ location: { search: `${otherSearch}&${searchParam}=${viewTraces}` } });
         toggle();
         expect(push).toHaveBeenLastCalledWith(getUrl({ [otherParam]: otherValue, [searchParam]: viewDdg }));
-        expect(trackAltViewSpy).toHaveBeenLastCalledWith(viewDdg);
       });
 
       it('shows ddg instead of scatterplot and results', () => {

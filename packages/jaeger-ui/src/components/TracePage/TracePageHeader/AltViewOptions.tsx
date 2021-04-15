@@ -17,13 +17,6 @@ import { Dropdown, Icon, Menu } from 'antd';
 import { Link } from 'react-router-dom';
 import './AltViewOptions.css';
 
-import {
-  trackGanttView,
-  trackGraphView,
-  trackStatisticsView,
-  trackJsonView,
-  trackRawJsonView,
-} from './TracePageHeader.track';
 import prefixUrl from '../../../utils/prefix-url';
 import { ETraceViewType } from '../types';
 
@@ -52,13 +45,6 @@ export default function AltViewOptions(props: Props) {
   const { onTraceViewChange, viewType, traceID } = props;
 
   const handleSelectView = (item: ETraceViewType) => {
-    if (item === ETraceViewType.TraceTimelineViewer) {
-      trackGanttView();
-    } else if (item === ETraceViewType.TraceGraph) {
-      trackGraphView();
-    } else if (item === ETraceViewType.TraceStatistics) {
-      trackStatisticsView();
-    }
     onTraceViewChange(item);
   };
 
@@ -76,7 +62,6 @@ export default function AltViewOptions(props: Props) {
           to={prefixUrl(`/api/traces/${traceID}?prettyPrint=true`)}
           rel="noopener noreferrer"
           target="_blank"
-          onClick={trackJsonView}
         >
           Trace JSON
         </Link>
@@ -86,7 +71,6 @@ export default function AltViewOptions(props: Props) {
           to={prefixUrl(`/api/traces/${traceID}?raw=true&prettyPrint=true`)}
           rel="noopener noreferrer"
           target="_blank"
-          onClick={trackRawJsonView}
         >
           Trace JSON (unadjusted)
         </Link>

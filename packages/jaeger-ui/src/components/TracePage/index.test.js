@@ -38,14 +38,12 @@ import {
   TracePageImpl as TracePage,
   VIEW_MIN_RANGE,
 } from './index';
-import * as track from './index.track';
 import ArchiveNotifier from './ArchiveNotifier';
 import { reset as resetShortcuts } from './keyboard-shortcuts';
 import { cancel as cancelScroll } from './scroll-page';
 import * as calculateTraceDagEV from './TraceGraph/calculateTraceDagEV';
 import SpanGraph from './TracePageHeader/SpanGraph';
 import TracePageHeader from './TracePageHeader';
-import { trackSlimHeaderToggle } from './TracePageHeader/TracePageHeader.track';
 import TraceTimelineViewer from './TraceTimelineViewer';
 import ErrorMessage from '../common/ErrorMessage';
 import LoadingIndicator from '../common/LoadingIndicator';
@@ -118,7 +116,6 @@ describe('<TracePage>', () => {
       expect(updateUiFindSpy).toHaveBeenCalledWith({
         history: defaultProps.history,
         location: defaultProps.location,
-        trackFindFunction: track.trackFilter,
       });
     });
 
@@ -139,15 +136,8 @@ describe('<TracePage>', () => {
 
   describe('viewing uiFind matches', () => {
     describe('focusUiFindMatches', () => {
-      let trackFocusSpy;
-
-      beforeAll(() => {
-        trackFocusSpy = jest.spyOn(track, 'trackFocusMatches');
-      });
-
       beforeEach(() => {
         defaultProps.focusUiFindMatches.mockReset();
-        trackFocusSpy.mockReset();
       });
 
       it('calls props.focusUiFindMatches with props.trace.data and uiFind when props.trace.data is present', () => {
@@ -155,7 +145,6 @@ describe('<TracePage>', () => {
         wrapper.setProps({ uiFind });
         wrapper.find(TracePageHeader).prop('focusUiFindMatches')();
         expect(defaultProps.focusUiFindMatches).toHaveBeenCalledWith(defaultProps.trace.data, uiFind);
-        expect(trackFocusSpy).toHaveBeenCalledTimes(1);
       });
 
       it('handles when props.trace.data is absent', () => {
@@ -163,48 +152,25 @@ describe('<TracePage>', () => {
         wrapper.setProps({ trace: {} });
         propFn();
         expect(defaultProps.focusUiFindMatches).not.toHaveBeenCalled();
-        expect(trackFocusSpy).not.toHaveBeenCalled();
       });
     });
 
     describe('nextResult', () => {
-      let trackNextSpy;
-
-      beforeAll(() => {
-        trackNextSpy = jest.spyOn(track, 'trackNextMatch');
-      });
-
-      beforeEach(() => {
-        trackNextSpy.mockReset();
-      });
-
       it('calls scrollToNextVisibleSpan and tracks it', () => {
         const scrollNextSpy = jest
           .spyOn(wrapper.instance()._scrollManager, 'scrollToNextVisibleSpan')
           .mockImplementation();
         wrapper.find(TracePageHeader).prop('nextResult')();
-        expect(trackNextSpy).toHaveBeenCalledTimes(1);
         expect(scrollNextSpy).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('prevResult', () => {
-      let trackPrevSpy;
-
-      beforeAll(() => {
-        trackPrevSpy = jest.spyOn(track, 'trackPrevMatch');
-      });
-
-      beforeEach(() => {
-        trackPrevSpy.mockReset();
-      });
-
       it('calls scrollToPrevVisibleSpan and tracks it', () => {
         const scrollPrevSpy = jest
           .spyOn(wrapper.instance()._scrollManager, 'scrollToPrevVisibleSpan')
           .mockImplementation();
         wrapper.find(TracePageHeader).prop('prevResult')();
-        expect(trackPrevSpy).toHaveBeenCalledTimes(1);
         expect(scrollPrevSpy).toHaveBeenCalledTimes(1);
       });
     });
@@ -685,19 +651,15 @@ describe('<TracePage>', () => {
 
     it('tracks setting the header to slim-view', () => {
       const { onSlimViewClicked } = header.props();
-      trackSlimHeaderToggle.mockReset();
       onSlimViewClicked(true);
       onSlimViewClicked(false);
-      expect(trackSlimHeaderToggle.mock.calls).toEqual([[true], [false]]);
     });
 
     it('tracks changes to the viewRange', () => {
       const src = 'some-source';
       const { updateViewRangeTime } = spanGraph.props();
-      track.trackRange.mockClear();
       const range = [0.25, 0.75];
       updateViewRangeTime(...range, src);
-      expect(track.trackRange.mock.calls).toEqual([[src, range, [0, 1]]]);
     });
   });
 });

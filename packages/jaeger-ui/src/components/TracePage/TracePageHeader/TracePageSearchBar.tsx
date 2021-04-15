@@ -18,7 +18,6 @@ import cx from 'classnames';
 import IoAndroidLocate from 'react-icons/lib/io/android-locate';
 
 import * as markers from './TracePageSearchBar.markers';
-import { trackFilter } from '../index.track';
 import UiFindInput from '../../common/UiFindInput';
 import { TNil } from '../../../types';
 
@@ -63,7 +62,6 @@ export function TracePageSearchBarFn(props: TracePageSearchBarProps & { forwarde
         <UiFindInput
           inputProps={uiFindInputInputProps}
           forwardedRef={forwardedRef}
-          trackFindFunction={trackFilter}
         />
         {navigable && (
           <>

@@ -17,7 +17,6 @@ import { shallow } from 'enzyme';
 
 import * as markers from './TracePageSearchBar.markers';
 import DefaultTracePageSearchBar, { TracePageSearchBarFn as TracePageSearchBar } from './TracePageSearchBar';
-import { trackFilter } from '../index.track';
 import UiFindInput from '../../common/UiFindInput';
 
 const defaultProps = {
@@ -50,7 +49,6 @@ describe('<TracePageSearchBar>', () => {
       expect(suffix.hasClass('TracePageSearchBar--count')).toBe(true);
       expect(suffix.text()).toBe(String(defaultProps.resultCount));
       expect(renderedUiFindInput.prop('forwardedRef')).toBe(defaultProps.forwardedRef);
-      expect(renderedUiFindInput.prop('trackFindFunction')).toBe(trackFilter);
     });
 
     it('renders buttons', () => {

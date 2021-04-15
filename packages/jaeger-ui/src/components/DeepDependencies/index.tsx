@@ -18,7 +18,6 @@ import _get from 'lodash/get';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import { trackClearOperation, trackFocusPaths, trackHide, trackSetService, trackShow } from './index.track';
 import Graph from './Graph';
 import Header from './Header';
 import SidePanel from './SidePanel';
@@ -123,7 +122,6 @@ export class DeepDependencyGraphPageImpl extends React.PureComponent<TProps, TSt
   }
 
   clearOperation = () => {
-    trackClearOperation();
     this.updateUrlState({ operation: undefined });
   };
 
@@ -131,7 +129,6 @@ export class DeepDependencyGraphPageImpl extends React.PureComponent<TProps, TSt
     const elems = this.getVisiblePathElems(vertexKey);
     if (!elems) return;
 
-    trackFocusPaths();
     const indices = ([] as number[]).concat(
       ...elems.map(({ memberOf }) => memberOf.members.map(({ visibilityIdx }) => visibilityIdx))
     );
@@ -161,7 +158,6 @@ export class DeepDependencyGraphPageImpl extends React.PureComponent<TProps, TSt
     const visEncoding = graph.getVisWithoutVertex(vertexKey, urlState.visEncoding);
     if (!visEncoding) return;
 
-    trackHide();
     this.updateUrlState({ visEncoding });
   };
 
@@ -197,7 +193,6 @@ export class DeepDependencyGraphPageImpl extends React.PureComponent<TProps, TSt
       fetchServiceServerOps(service);
     }
     this.updateUrlState({ operation: undefined, service, visEncoding: undefined });
-    trackSetService();
   };
 
   setViewModifier = (visibilityIndices: number[], viewModifier: EViewModifier, enable: boolean) => {
@@ -235,9 +230,7 @@ export class DeepDependencyGraphPageImpl extends React.PureComponent<TProps, TSt
     const result = graph.getVisWithUpdatedGeneration(vertexKey, direction, urlState.visEncoding);
     if (!result) return;
 
-    const { visEncoding, update } = result;
-    if (update === ECheckedStatus.Empty) trackHide(direction);
-    else trackShow(direction);
+    const { visEncoding } = result;
     this.updateUrlState({ visEncoding });
   };
 

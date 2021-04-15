@@ -23,7 +23,6 @@ import ReactDOM from 'react-dom';
 import { document } from 'global';
 
 import JaegerUIApp from './components/App';
-import { context as trackingContext } from './utils/tracking';
 
 // these need to go after the App import
 /* eslint-disable import/first */
@@ -36,20 +35,9 @@ import 'u-basscss/css/typography.css';
 
 const UI_ROOT_ID = 'jaeger-ui-root';
 
-if (trackingContext) {
-  trackingContext.context(() => {
-    ReactDOM.render(
-      <BrowserRouter>
-        <JaegerUIApp />
-      </BrowserRouter>,
-      document.getElementById(UI_ROOT_ID)
-    );
-  });
-} else {
-  ReactDOM.render(
-    <BrowserRouter>
-      <JaegerUIApp />
-    </BrowserRouter>,
-    document.getElementById(UI_ROOT_ID)
-  );
-}
+ReactDOM.render(
+  <BrowserRouter>
+    <JaegerUIApp />
+  </BrowserRouter>,
+  document.getElementById(UI_ROOT_ID)
+);

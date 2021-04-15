@@ -19,7 +19,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import { ReduxState } from '../../types';
 import { EmbeddedState } from '../../types/embedded';
-import { trackPageView } from '../../utils/tracking';
 
 import './Page.css';
 
@@ -34,19 +33,6 @@ const { Content } = Layout;
 
 // export for tests
 export class PageImpl extends React.Component<TProps> {
-  componentDidMount() {
-    const { pathname, search } = this.props;
-    trackPageView(pathname, search);
-  }
-
-  componentDidUpdate(prevProps: Readonly<TProps>) {
-    const { pathname, search } = prevProps;
-    const { pathname: nextPathname, search: nextSearch } = this.props;
-    if (pathname !== nextPathname || search !== nextSearch) {
-      trackPageView(nextPathname, nextSearch);
-    }
-  }
-
   render() {
     return (
       <div>

@@ -21,7 +21,6 @@ import MdVisibilityOff from 'react-icons/lib/md/visibility-off';
 import Header from './index';
 import HopsSelector from './HopsSelector';
 import NameSelector from '../../common/NameSelector';
-import * as track from '../index.track';
 
 describe('<Header>', () => {
   const minProps = {
@@ -34,12 +33,7 @@ describe('<Header>', () => {
   const services = [service];
   const operation = 'testOperation';
   const operations = [operation];
-  let trackSetOpSpy;
   let wrapper;
-
-  beforeAll(() => {
-    trackSetOpSpy = jest.spyOn(track, 'trackHeaderSetOperation');
-  });
 
   beforeEach(() => {
     wrapper = shallow(<Header {...minProps} />);
@@ -66,19 +60,6 @@ describe('<Header>', () => {
 
     wrapper.setProps({ operation, operations });
     expect(wrapper).toMatchSnapshot();
-  });
-
-  it('tracks when operation selector sets a value', () => {
-    wrapper.setProps({ service, services });
-    const testOp = 'test operation';
-    expect(trackSetOpSpy).not.toHaveBeenCalled();
-
-    wrapper
-      .find(NameSelector)
-      .at(1)
-      .prop('setValue')(testOp);
-    expect(trackSetOpSpy).toHaveBeenCalledTimes(1);
-    expect(minProps.setOperation).toHaveBeenCalledWith(testOp);
   });
 
   it('renders the hops selector if distanceToPathElems is provided', () => {

@@ -20,7 +20,6 @@ import React from 'react';
 import { mount } from 'enzyme';
 
 import { mapStateToProps, PageImpl as Page } from './Page';
-import { trackPageView } from '../../utils/tracking';
 
 describe('mapStateToProps()', () => {
   it('maps state to props', () => {
@@ -38,7 +37,6 @@ describe('<Page>', () => {
   let wrapper;
 
   beforeEach(() => {
-    trackPageView.mockReset();
     props = {
       pathname: String(Math.random()),
       search: String(Math.random()),
@@ -50,21 +48,8 @@ describe('<Page>', () => {
     expect(wrapper).toBeDefined();
   });
 
-  it('tracks an initial page-view', () => {
-    const { pathname, search } = props;
-    expect(trackPageView.mock.calls).toEqual([[pathname, search]]);
-  });
-
-  it('tracks a pageView when the location changes', () => {
-    trackPageView.mockReset();
-    props = { pathname: 'le-path', search: 'searching' };
-    wrapper.setProps(props);
-    expect(trackPageView.mock.calls).toEqual([[props.pathname, props.search]]);
-  });
-
   describe('Page embedded', () => {
     beforeEach(() => {
-      trackPageView.mockReset();
       props = {
         pathname: String(Math.random()),
         search: 'embed=v0&hideGraph',

@@ -25,7 +25,6 @@ import { bindActionCreators } from 'redux';
 
 import ArchiveNotifier from './ArchiveNotifier';
 import { actions as archiveActions } from './ArchiveNotifier/duck';
-import { trackFilter, trackFocusMatches, trackNextMatch, trackPrevMatch, trackRange } from './index.track';
 import {
   CombokeysHandler,
   merge as mergeShortcuts,
@@ -37,7 +36,6 @@ import ScrollManager from './ScrollManager';
 import calculateTraceDagEV from './TraceGraph/calculateTraceDagEV';
 import TraceGraph from './TraceGraph/TraceGraph';
 import { TEv } from './TraceGraph/types';
-import { trackSlimHeaderToggle } from './TracePageHeader/TracePageHeader.track';
 import TracePageHeader from './TracePageHeader';
 import TraceTimelineViewer from './TraceTimelineViewer';
 import { actions as timelineActions } from './TraceTimelineViewer/duck';
@@ -242,7 +240,6 @@ export class TracePageImpl extends React.PureComponent<TProps, TState> {
     updateUiFind({
       history,
       location,
-      trackFindFunction: trackFilter,
     });
     if (this._searchBar.current) this._searchBar.current.blur();
   };
@@ -252,9 +249,6 @@ export class TracePageImpl extends React.PureComponent<TProps, TState> {
   };
 
   updateViewRangeTime: TUpdateViewRangeTimeFunction = (start: number, end: number, trackSrc?: string) => {
-    if (trackSrc) {
-      trackRange(trackSrc, [start, end], this.state.viewRange.time.current);
-    }
     const current: [number, number] = [start, end];
     const time = { current };
     this.setState((state: TState) => ({ viewRange: { ...state.viewRange, time } }));
@@ -269,7 +263,6 @@ export class TracePageImpl extends React.PureComponent<TProps, TState> {
 
   toggleSlimView = () => {
     const { slimView } = this.state;
-    trackSlimHeaderToggle(!slimView);
     this.setState({ slimView: !slimView });
   };
 
@@ -305,18 +298,15 @@ export class TracePageImpl extends React.PureComponent<TProps, TState> {
   focusUiFindMatches = () => {
     const { trace, focusUiFindMatches, uiFind } = this.props;
     if (trace && trace.data) {
-      trackFocusMatches();
       focusUiFindMatches(trace.data, uiFind);
     }
   };
 
   nextResult = () => {
-    trackNextMatch();
     this._scrollManager.scrollToNextVisibleSpan();
   };
 
   prevResult = () => {
-    trackPrevMatch();
     this._scrollManager.scrollToPrevVisibleSpan();
   };
 

@@ -17,7 +17,6 @@ import { shallow } from 'enzyme';
 import _set from 'lodash/set';
 
 import { DeepDependencyGraphPageImpl, mapDispatchToProps, mapStateToProps } from '.';
-import * as track from './index.track';
 import * as url from './url';
 import Graph from './Graph';
 import Header from './Header';
@@ -109,17 +108,14 @@ describe('DeepDependencyGraphPage', () => {
     describe('updateUrlState', () => {
       const visEncoding = 'test vis encoding';
       let getUrlSpy;
-      let trackHideSpy;
 
       beforeAll(() => {
         getUrlSpy = jest.spyOn(url, 'getUrl');
-        trackHideSpy = jest.spyOn(track, 'trackHide');
       });
 
       beforeEach(() => {
         getUrlSpy.mockReset();
         props.history.push.mockReset();
-        trackHideSpy.mockClear();
       });
 
       it('updates provided value', () => {
@@ -182,35 +178,17 @@ describe('DeepDependencyGraphPage', () => {
       });
 
       describe('clearOperation', () => {
-        let trackClearOperationSpy;
-
-        beforeAll(() => {
-          trackClearOperationSpy = jest.spyOn(track, 'trackClearOperation');
-        });
-
         it('removes op from urlState', () => {
           ddgPageImpl.clearOperation();
           expect(getUrlSpy).toHaveBeenLastCalledWith(urlStateWithoutOp, undefined);
-          expect(trackClearOperationSpy).toHaveBeenCalledTimes(1);
         });
       });
 
       describe('focusPathsThroughVertex', () => {
-        let trackFocusPathsSpy;
-
-        beforeAll(() => {
-          trackFocusPathsSpy = jest.spyOn(track, 'trackFocusPaths');
-        });
-
-        beforeEach(() => {
-          trackFocusPathsSpy.mockClear();
-        });
-
         it('no-ops if props does not have graph', () => {
           ddgWithoutGraph.focusPathsThroughVertex(vertexKey);
 
           expect(getUrlSpy).not.toHaveBeenCalled();
-          expect(trackFocusPathsSpy).not.toHaveBeenCalled();
         });
 
         it('updates url state and tracks focus paths', () => {
@@ -358,15 +336,9 @@ describe('DeepDependencyGraphPage', () => {
 
       describe('setService', () => {
         const service = 'newService';
-        let trackSetServiceSpy;
-
-        beforeAll(() => {
-          trackSetServiceSpy = jest.spyOn(track, 'trackSetService');
-        });
 
         beforeEach(() => {
           props.fetchServiceServerOps.mockReset();
-          trackSetServiceSpy.mockClear();
         });
 
         it('updates service and clears operation and visEncoding', () => {
@@ -376,14 +348,12 @@ describe('DeepDependencyGraphPage', () => {
             undefined
           );
           expect(props.history.push).toHaveBeenCalledTimes(1);
-          expect(trackSetServiceSpy).toHaveBeenCalledTimes(1);
         });
 
         it('fetches operations for service when not yet provided', () => {
           ddgPageImpl.setService(service);
           expect(props.fetchServiceServerOps).toHaveBeenLastCalledWith(service);
           expect(props.fetchServiceServerOps).toHaveBeenCalledTimes(1);
-          expect(trackSetServiceSpy).toHaveBeenCalledTimes(1);
 
           const pageWithOpForService = new DeepDependencyGraphPageImpl({
             ...props,
@@ -392,7 +362,6 @@ describe('DeepDependencyGraphPage', () => {
           const { length: callCount } = props.fetchServiceServerOps.mock.calls;
           pageWithOpForService.setService(service);
           expect(props.fetchServiceServerOps).toHaveBeenCalledTimes(callCount);
-          expect(trackSetServiceSpy).toHaveBeenCalledTimes(2);
         });
       });
 
@@ -442,30 +411,17 @@ describe('DeepDependencyGraphPage', () => {
 
       describe('updateGenerationVisibility', () => {
         const direction = EDirection.Upstream;
-        let trackShowSpy;
-
-        beforeAll(() => {
-          trackShowSpy = jest.spyOn(track, 'trackShow');
-        });
-
-        beforeEach(() => {
-          trackShowSpy.mockClear();
-        });
 
         it('no-ops if props does not have graph', () => {
           ddgWithoutGraph.updateGenerationVisibility(vertexKey, direction);
 
           expect(getUrlSpy).not.toHaveBeenCalled();
-          expect(trackHideSpy).not.toHaveBeenCalled();
-          expect(trackShowSpy).not.toHaveBeenCalled();
         });
 
         it('no-ops if graph.getVisWithUpdatedGeneration returns undefined', () => {
           ddgPageImpl.updateGenerationVisibility(vertexKey, direction);
 
           expect(getUrlSpy).not.toHaveBeenCalled();
-          expect(trackHideSpy).not.toHaveBeenCalled();
-          expect(trackShowSpy).not.toHaveBeenCalled();
         });
 
         it('updates url state and tracks hide if result.status is ECheckedStatus.Empty', () => {
@@ -484,9 +440,6 @@ describe('DeepDependencyGraphPage', () => {
             Object.assign({}, props.urlState, { visEncoding }),
             undefined
           );
-          expect(trackHideSpy).toHaveBeenCalledTimes(1);
-          expect(trackHideSpy).toHaveBeenCalledWith(direction);
-          expect(trackShowSpy).not.toHaveBeenCalled();
         });
 
         it('updates url state and tracks show if result.status is ECheckedStatus.Full', () => {
@@ -505,9 +458,6 @@ describe('DeepDependencyGraphPage', () => {
             Object.assign({}, props.urlState, { visEncoding }),
             undefined
           );
-          expect(trackHideSpy).not.toHaveBeenCalled();
-          expect(trackShowSpy).toHaveBeenCalledTimes(1);
-          expect(trackShowSpy).toHaveBeenCalledWith(direction);
         });
       });
     });

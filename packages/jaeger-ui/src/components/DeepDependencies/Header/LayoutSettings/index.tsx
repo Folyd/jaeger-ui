@@ -20,7 +20,6 @@ import { RadioChangeEvent } from 'antd/lib/radio';
 import settingsIcon from './settingsIcon';
 import ChevronDown from '../ChevronDown';
 import { EDdgDensity } from '../../../../model/ddg/types';
-import { trackDensityChange, trackToggleShowOp } from '../../index.track';
 
 import './index.css';
 
@@ -77,13 +76,11 @@ export default class LayoutSettings extends React.PureComponent<TProps> {
     const { density: prevDensity } = this.props;
     const { value: nextDensity } = event.target;
     if (prevDensity === nextDensity) return;
-    trackDensityChange(prevDensity, nextDensity, densityOptions);
     this.props.setDensity(nextDensity);
   };
 
   private toggleShowOperations = (event: CheckboxChangeEvent) => {
     const { checked } = event.target;
-    trackToggleShowOp(checked);
     this.props.toggleShowOperations(checked);
   };
 

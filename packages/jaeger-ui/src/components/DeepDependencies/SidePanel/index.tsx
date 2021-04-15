@@ -21,7 +21,6 @@ import { TDdgVertex } from '../../../model/ddg/types';
 import { TPathAgnosticDecorationSchema } from '../../../model/path-agnostic-decorations/types';
 import { getConfigValue } from '../../../utils/config/get-config';
 import DetailsPanel from './DetailsPanel';
-import * as track from './index.track';
 
 import './index.css';
 
@@ -38,26 +37,15 @@ export default class SidePanel extends React.PureComponent<TProps> {
   constructor(props: TProps) {
     super(props);
 
-    const { selectedDecoration, selectedVertex } = props;
-    if (selectedDecoration) track.trackDecorationSelected(selectedDecoration);
-    if (selectedVertex) track.trackDecorationViewDetails(selectedVertex);
 
     this.decorations = getConfigValue('pathAgnosticDecorations');
   }
 
-  componentDidUpdate(prevProps: TProps) {
-    if (prevProps.selectedVertex !== this.props.selectedVertex) {
-      track.trackDecorationViewDetails(this.props.selectedVertex);
-    }
-  }
-
   clearSelected = () => {
-    track.trackDecorationViewDetails();
     this.props.clearSelected();
   };
 
   selectDecoration = (decoration?: string) => {
-    track.trackDecorationSelected(decoration);
     this.props.selectDecoration(decoration);
   };
 

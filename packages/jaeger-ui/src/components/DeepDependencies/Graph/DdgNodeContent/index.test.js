@@ -31,7 +31,6 @@ import {
   UnconnectedDdgNodeContent as DdgNodeContent,
 } from '.';
 import { MAX_LENGTH, MAX_LINKED_TRACES, MIN_LENGTH, PARAM_NAME_LENGTH, RADIUS } from './constants';
-import * as track from '../../index.track';
 import FilteredList from '../../../common/FilteredList';
 import * as getSearchUrl from '../../../SearchTracePage/url';
 
@@ -286,37 +285,20 @@ describe('<DdgNodeContent>', () => {
     });
 
     describe('setFocus', () => {
-      let trackSetFocusSpy;
-
-      beforeAll(() => {
-        trackSetFocusSpy = jest.spyOn(track, 'trackSetFocus');
-      });
-
       it('tracks when setFocus link is clicked', () => {
-        expect(trackSetFocusSpy).toHaveBeenCalledTimes(0);
         wrapper.find(`[href="${props.focalNodeUrl}"]`).simulate('click');
-        expect(trackSetFocusSpy).toHaveBeenCalledTimes(1);
       });
     });
 
     describe('setOperation', () => {
-      let trackSetOpSpy;
-
-      beforeAll(() => {
-        trackSetOpSpy = jest.spyOn(track, 'trackVertexSetOperation');
-      });
-
       it('tracks when popover sets a value', () => {
         wrapper.setProps({ operation: operationArray });
-        expect(trackSetOpSpy).not.toHaveBeenCalled();
 
         const list = shallow(<div>{wrapper.find(Popover).prop('content')}</div>).find(FilteredList);
         expect(list.prop('options')).toBe(operationArray);
-        expect(trackSetOpSpy).not.toHaveBeenCalled();
 
         list.prop('setValue')(operationArray[operationArray.length - 1]);
         expect(props.setOperation).toHaveBeenCalledWith(operationArray[operationArray.length - 1]);
-        expect(trackSetOpSpy).toHaveBeenCalledTimes(1);
       });
     });
 
@@ -447,13 +429,11 @@ describe('<DdgNodeContent>', () => {
         return ids;
       };
       let getSearchUrlSpy;
-      let trackViewTracesSpy;
       const verifyLastIDs = expectedIDs => {
         const getSearchUrlCallCount = getSearchUrlSpy.mock.calls.length;
         const actualIDs = getSearchUrlSpy.mock.calls[getSearchUrlCallCount - 1][0].traceID;
 
         expect(actualIDs.sort()).toEqual(expectedIDs.sort());
-        expect(trackViewTracesSpy).toHaveBeenCalledTimes(getSearchUrlCallCount);
       };
       let originalOpen;
 
@@ -461,13 +441,11 @@ describe('<DdgNodeContent>', () => {
         originalOpen = window.open;
         window.open = jest.fn();
         getSearchUrlSpy = jest.spyOn(getSearchUrl, 'getUrl');
-        trackViewTracesSpy = jest.spyOn(track, 'trackViewTraces');
       });
 
       beforeEach(() => {
         getSearchUrlSpy.mockClear();
         window.open.mockReset();
-        trackViewTracesSpy.mockReset();
       });
 
       afterAll(() => {

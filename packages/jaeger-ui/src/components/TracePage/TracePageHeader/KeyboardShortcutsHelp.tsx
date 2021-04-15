@@ -16,7 +16,6 @@ import * as React from 'react';
 import { Button, Modal, Table } from 'antd';
 
 import keyboardMappings from '../keyboard-mappings';
-import track from './KeyboardShortcutsHelp.track';
 
 import './KeyboardShortcutsHelp.css';
 
@@ -90,7 +89,6 @@ export default class KeyboardShortcutsHelp extends React.PureComponent<Props, St
   };
 
   onCtaClicked = () => {
-    track();
     this.setState({ visible: true });
   };
 

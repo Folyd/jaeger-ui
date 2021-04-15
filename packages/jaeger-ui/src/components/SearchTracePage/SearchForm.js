@@ -28,7 +28,6 @@ import { Field, reduxForm, formValueSelector } from 'redux-form';
 import store from 'store';
 
 import * as markers from './SearchForm.markers';
-import { trackFormInput } from './SearchForm.track';
 import VirtSelect from '../common/VirtSelect';
 import * as jaegerApiActions from '../../actions/jaeger-api';
 import { formatDate, formatTime } from '../../utils/date';
@@ -237,8 +236,6 @@ export function submitForm(fields, searchTraces) {
     start = times.start;
     end = times.end;
   }
-
-  trackFormInput(resultsLimit, operation, tags, minDuration, maxDuration, lookback);
 
   searchTraces({
     service,
