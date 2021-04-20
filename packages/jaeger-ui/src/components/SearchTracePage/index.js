@@ -15,7 +15,7 @@
 /* eslint-disable react/require-default-props */
 
 import React, { Component } from 'react';
-import { Col, Row, Tabs } from 'antd';
+import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -34,12 +34,9 @@ import { actions as traceDiffActions } from '../TraceDiff/duck';
 import { fetchedState } from '../../constants';
 import { sortTraces } from '../../model/search';
 import { stripEmbeddedState } from '../../utils/embedded-url';
-import FileLoader from './FileLoader';
 
 import './index.css';
 import JaegerLogo from '../../img/jaeger-logo.svg';
-
-const TabPane = Tabs.TabPane;
 
 // export for tests
 export class SearchTracePageImpl extends Component {
@@ -88,7 +85,6 @@ export class SearchTracePageImpl extends Component {
       services,
       traceResults,
       queryOfResults,
-      loadJsonTraces,
       urlQueryParams,
     } = this.props;
     const hasTraceResults = traceResults && traceResults.length > 0;
@@ -99,18 +95,7 @@ export class SearchTracePageImpl extends Component {
         {!embedded && (
           <Col span={6} className="SearchTracePage--column">
             <div className="SearchTracePage--find">
-              <Tabs size="large">
-                <TabPane tab="Search" key="searchForm">
-                  {!loadingServices && services ? <SearchForm services={services} /> : <LoadingIndicator />}
-                </TabPane>
-                <TabPane tab="JSON File" key="fileLoader">
-                  <FileLoader
-                    loadJsonTraces={(fileList: FileList) => {
-                      loadJsonTraces(fileList);
-                    }}
-                  />
-                </TabPane>
-              </Tabs>
+              {!loadingServices && services ? <SearchForm services={services} /> : <LoadingIndicator />}
             </div>
           </Col>
         )}
@@ -193,7 +178,6 @@ SearchTracePageImpl.propTypes = {
       message: PropTypes.string,
     })
   ),
-  loadJsonTraces: PropTypes.func,
 };
 
 const stateTraceXformer = memoizeOne(stateTrace => {
