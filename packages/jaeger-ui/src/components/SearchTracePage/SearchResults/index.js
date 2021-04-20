@@ -21,7 +21,6 @@ import { Link, withRouter } from 'react-router-dom';
 import { Field, formValueSelector, reduxForm } from 'redux-form';
 import queryString from 'query-string';
 
-import AltViewOptions from './AltViewOptions';
 import DiffSelection from './DiffSelection';
 import * as markers from './index.markers';
 import ResultItem from './ResultItem';
@@ -29,7 +28,6 @@ import ScatterPlot from './ScatterPlot';
 import { getUrl } from '../url';
 import LoadingIndicator from '../../common/LoadingIndicator';
 import NewWindowIcon from '../../common/NewWindowIcon';
-import SearchResultsDDG from '../../DeepDependencies/traces';
 import { getLocation } from '../../TracePage/url';
 import * as orderBy from '../../../model/order-by';
 import { getPercentageOfDuration } from '../../../utils/date';
@@ -115,7 +113,6 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
       disableComparisons,
       goToTrace,
       hideGraph,
-      history,
       loading,
       location,
       maxTraceDuration,
@@ -177,7 +174,6 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
               {traces.length} Trace{traces.length > 1 && 's'}
             </h2>
             {traceResultsView && <SelectSort />}
-            <AltViewOptions traceResultsView={traceResultsView} onDdgViewClicked={this.onDdgViewClicked} />
             {showStandaloneLink && (
               <Link
                 className="u-tx-inherit ub-nowrap ub-ml3"
@@ -190,11 +186,6 @@ export class UnconnectedSearchResults extends React.PureComponent<SearchResultsP
             )}
           </div>
         </div>
-        {!traceResultsView && (
-          <div className="SearchResults--ddg-container">
-            <SearchResultsDDG location={location} history={history} />
-          </div>
-        )}
         {traceResultsView && diffSelection}
         {traceResultsView && (
           <ul className="ub-list-reset">

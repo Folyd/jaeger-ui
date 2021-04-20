@@ -20,8 +20,6 @@ import { ConnectedRouter } from 'react-router-redux';
 
 import NotFound from './NotFound';
 import Page from './Page';
-import DeepDependencies from '../DeepDependencies';
-import { ROUTE_PATH as deepDependenciesPath } from '../DeepDependencies/url';
 import SearchTracePage from '../SearchTracePage';
 import { ROUTE_PATH as searchPath } from '../SearchTracePage/url';
 import TraceDiff from '../TraceDiff';
@@ -56,7 +54,6 @@ export default class JaegerUIApp extends Component {
               <Route path={searchPath} component={SearchTracePage} />
               <Route path={traceDiffPath} component={TraceDiff} />
               <Route path={tracePath} component={TracePage} />
-              <Route path={deepDependenciesPath} component={DeepDependencies} />
 
               <Redirect exact path="/" to={searchPath} />
               <Redirect exact path={prefixUrl()} to={searchPath} />
