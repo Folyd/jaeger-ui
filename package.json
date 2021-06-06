@@ -69,10 +69,5 @@
     "proseWrap": "never",
     "singleQuote": true,
     "trailingComma": "es5"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm-run-all -ln --parallel lint test"
-    }
   }
 }
