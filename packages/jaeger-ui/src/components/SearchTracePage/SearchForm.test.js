@@ -23,7 +23,6 @@ import store from 'store';
 
 import {
   convertQueryParamsToFormDates,
-  convTagsLogfmt,
   getUnixTimeStampInMSFromForm,
   lookbackToTimestamp,
   mapDispatchToProps,
@@ -101,29 +100,6 @@ describe('conversion utils', () => {
       expect(queryStartDateTime).toBe(startMoment.format(TIME_FORMAT));
       expect(queryEndDate).toBe(endMoment.format(DATE_FORMAT));
       expect(queryEndDateTime).toBe(endMoment.format(TIME_FORMAT));
-    });
-  });
-
-  describe('convTagsLogfmt()', () => {
-    it('converts logfmt formatted string to JSON', () => {
-      const input = 'http.status_code=404 span.kind=client key="with a long value"';
-      const target = JSON.stringify({
-        'http.status_code': '404',
-        'span.kind': 'client',
-        key: 'with a long value',
-      });
-      expect(convTagsLogfmt(input)).toBe(target);
-    });
-
-    // https://github.com/jaegertracing/jaeger/issues/550#issuecomment-352850811
-    it('converts all values to strings', () => {
-      const input = 'aBoolKey error=true num=9';
-      const target = JSON.stringify({
-        aBoolKey: 'true',
-        error: 'true',
-        num: '9',
-      });
-      expect(convTagsLogfmt(input)).toBe(target);
     });
   });
 

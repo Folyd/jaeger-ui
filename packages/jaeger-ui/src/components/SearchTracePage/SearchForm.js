@@ -16,7 +16,6 @@ import * as React from 'react';
 import { Form, Input, Button, Popover, Select, Row, Col } from 'antd';
 import _get from 'lodash/get';
 import logfmtParser from 'logfmt/lib/logfmt_parser';
-import { stringify as logfmtStringify } from 'logfmt/lib/stringify';
 import moment from 'moment';
 import memoizeOne from 'memoize-one';
 import PropTypes from 'prop-types';
@@ -212,7 +211,6 @@ export function submitForm(fields, searchTraces) {
     endDate,
     endDateTime,
     operation,
-    tags,
     minDuration,
     maxDuration,
     lookback,
@@ -244,7 +242,6 @@ export function submitForm(fields, searchTraces) {
     lookback,
     start,
     end,
-    tags: convTagsLogfmt(tags) || undefined,
     minDuration: minDuration || null,
     maxDuration: maxDuration || null,
   });
@@ -303,47 +300,6 @@ export class SearchFormImpl extends React.PureComponent {
               options: ['all'].concat(opsForSvc).map(v => ({ label: v, value: v, title: v })),
               required: true,
             }}
-          />
-        </FormItem>
-
-        <FormItem
-          label={
-            <div>
-              Tags{' '}
-              <Popover
-                placement="topLeft"
-                trigger="click"
-                title={[
-                  <h3 key="title" className="SearchForm--tagsHintTitle">
-                    Values should be in the{' '}
-                    <a href="https://brandur.org/logfmt" rel="noopener noreferrer" target="_blank">
-                      logfmt
-                    </a>{' '}
-                    format.
-                  </h3>,
-                  <ul key="info" className="SearchForm--tagsHintInfo">
-                    <li>Use space for conjunctions</li>
-                    <li>Values containing whitespace should be enclosed in quotes</li>
-                  </ul>,
-                ]}
-                content={
-                  <div>
-                    <code className="SearchForm--tagsHintEg">
-                      error=true db.statement=&quot;select * from User&quot;
-                    </code>
-                  </div>
-                }
-              >
-                <IoHelp className="SearchForm--hintTrigger" />
-              </Popover>
-            </div>
-          }
-        >
-          <Field
-            name="tags"
-            component={AdaptedInput}
-            placeholder="http.status_code=200 error=true"
-            props={{ disabled }}
           />
         </FormItem>
 
@@ -512,8 +468,6 @@ export function mapStateToProps(state) {
     start,
     end,
     operation,
-    tag: tagParams,
-    tags: logfmtTags,
     maxDuration,
     minDuration,
     lookback,
@@ -550,51 +504,6 @@ export function mapStateToProps(state) {
     queryEndDateTime,
   } = convertQueryParamsToFormDates({ start, end });
 
-  let tags;
-  // continue to parse tagParams to remain backward compatible with older URLs
-  // but, parse to logfmt format instead of the former "key:value|k2:v2"
-  if (tagParams) {
-    // eslint-disable-next-line no-inner-declarations
-    function convFormerTag(accum, value) {
-      const parts = value.split(':', 2);
-      const key = parts[0];
-      if (key) {
-        // eslint-disable-next-line no-param-reassign
-        accum[key] = parts[1] == null ? '' : parts[1];
-        return true;
-      }
-      return false;
-    }
-
-    let data;
-    if (Array.isArray(tagParams)) {
-      data = tagParams.reduce((accum, str) => {
-        convFormerTag(accum, str);
-        return accum;
-      }, {});
-    } else if (typeof tagParams === 'string') {
-      const target = {};
-      data = convFormerTag(target, tagParams) ? target : null;
-    }
-    if (data) {
-      try {
-        tags = logfmtStringify(data);
-      } catch (_) {
-        tags = 'Parse Error';
-      }
-    } else {
-      tags = 'Parse Error';
-    }
-  }
-  if (logfmtTags) {
-    let data;
-    try {
-      data = JSON.parse(logfmtTags);
-      tags = logfmtStringify(data);
-    } catch (_) {
-      tags = 'Parse Error';
-    }
-  }
   let traceIDs;
   if (traceIDParams) {
     traceIDs = traceIDParams instanceof Array ? traceIDParams.join(',') : traceIDParams;
@@ -611,7 +520,6 @@ export function mapStateToProps(state) {
       endDate: queryEndDate || today,
       endDateTime: queryEndDateTime || currentTime,
       operation: operation || lastSearchOperation || DEFAULT_OPERATION,
-      tags,
       minDuration: minDuration || null,
       maxDuration: maxDuration || null,
       traceIDs: traceIDs || null,
